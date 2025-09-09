@@ -52,9 +52,7 @@ public class Main {
 
     private static void imprimirTodosFuncionarios() {
         System.out.println("Exibindo todos os funcionários");
-        for (Funcionario funcionario : funcionarios) {
-            System.out.println(formatarDadosFuncionario(funcionario));
-        }
+        funcionarios.forEach(funcionario -> System.out.println(formatarDadosFuncionario(funcionario)));
         System.out.println(SEPARADOR_LOG);
     }
 
@@ -73,47 +71,46 @@ public class Main {
         System.out.println("Aplicando aumento de 10% no salário");
         double percentualAumento = 0.1;
         BigDecimal multiplicadorAumento = BigDecimal.valueOf(1 + percentualAumento);
-        for (Funcionario funcionario : funcionarios) {
-            BigDecimal salario = funcionario.getSalario().multiply(multiplicadorAumento).setScale(2, RoundingMode.HALF_UP);
-            funcionario.setSalario(salario);
-        }
+        funcionarios.forEach(funcionario -> {
+            BigDecimal novoSalario = funcionario.getSalario().multiply(multiplicadorAumento).setScale(2, RoundingMode.HALF_UP);
+            funcionario.setSalario(novoSalario);
+        });
         System.out.println(SEPARADOR_LOG);
     }
 
     private static Map<String, List<Funcionario>> agruparPorFuncao() {
         System.out.println("Agrupando funcionários por função");
         Map<String, List<Funcionario>> gruposFuncionarios = new HashMap<>();
-        for (Funcionario funcionario : funcionarios) {
+        funcionarios.forEach(funcionario -> {
             if(gruposFuncionarios.containsKey(funcionario.getFuncao())){
                 gruposFuncionarios.get(funcionario.getFuncao()).add(funcionario);
             }
             else{
                 gruposFuncionarios.put(funcionario.getFuncao(), new ArrayList<>(List.of(funcionario)));
             }
-        }
+        });
         System.out.println(SEPARADOR_LOG);
         return gruposFuncionarios;
     }
 
     private static void imprimirFuncionariosAgrupadosPorFuncao(Map<String, List<Funcionario>> funcionariosAgrupados){
         System.out.println("Exibindo funcionários agrupados por função\n");
-        for (String funcao : funcionariosAgrupados.keySet()){
-            List<Funcionario> listaFuncionarios = funcionariosAgrupados.get(funcao);
+        funcionariosAgrupados.forEach((funcao, listaFuncionarios) -> {
             System.out.println("Exibindo funcionários da função " + funcao);
             listaFuncionarios.forEach(funcionario -> System.out.println(formatarDadosFuncionario(funcionario)));
             System.out.println();
-        }
+        });
         System.out.println(SEPARADOR_LOG);
     }
 
     private static void imprimirFuncionariosNascidosNosMeses10Ou12(){
         System.out.println("Funcionários nascidos nos meses 10 ou 12");
-        for (Funcionario funcionario : funcionarios){
+        funcionarios.forEach(funcionario -> {
             int mes = funcionario.getDataNascimento().getMonthValue();
             if (mes == 10 || mes == 12){
                 System.out.println(formatarDadosFuncionario(funcionario));
             }
-        }
+        });
         System.out.println(SEPARADOR_LOG);
     }
 
@@ -145,10 +142,10 @@ public class Main {
     private static void imprimirQuantidadeSalariosMinimos(){
         System.out.println("Exibindo quantidade de salários mínimos por funcionário");
         BigDecimal salarioMinimo = BigDecimal.valueOf(1212.00);
-        for (Funcionario funcionario : funcionarios){
+        funcionarios.forEach(funcionario -> {
             BigDecimal quantidade = funcionario.getSalario().divide(salarioMinimo, 2, RoundingMode.HALF_UP);
             System.out.println("Nome: " + funcionario.getNome() + " - Quantidade de salários: " + quantidade);
-        }
+        });
         System.out.println(SEPARADOR_LOG);
     }
 }
